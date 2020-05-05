@@ -1,0 +1,6 @@
+
+<RCC>
+  <qresource prefix="datamapstep">
+    <file>images/registration.png</file>
+  </qresource>
+</RCC>
