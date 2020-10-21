@@ -60,7 +60,7 @@ class Mapper(object):
         self._field_module = self._region.getFieldmodule()
         self._load_model()
         self._load_data()
-        self._calculate_data_projections()
+        # self._calculate_data_projections()
 
     def _load_model(self):
         result = self._region.readFile(self._zinc_model_file_name)
@@ -107,6 +107,9 @@ class Mapper(object):
         self._exterior_face_group.setName('exteriorFaceElementGroup')
         self._exterior_face_mesh_group = self._exterior_face_group.getMeshGroup()
         result = self._exterior_face_mesh_group.addElementsConditional(is_both)
+
+    def map(self):
+        self._calculate_data_projections()
 
     def _calculate_data_projections(self):
         self._get_project_face_mesh_group()

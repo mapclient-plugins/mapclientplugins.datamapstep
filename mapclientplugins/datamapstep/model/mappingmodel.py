@@ -89,7 +89,7 @@ class MappingModel(object):
             data_points.setFieldDomainType(Field.DOMAIN_TYPE_DATAPOINTS)
             data_points.setCoordinateField(data_coordinate)
             point_attr = data_points.getGraphicspointattributes()
-            point_attr.setBaseSize([0.05, 0.05, 0.05])
+            point_attr.setBaseSize([10, 10, 10])
             point_attr.setGlyphShapeType(Glyph.SHAPE_TYPE_SPHERE)
             data_points.setMaterial(self._material_module.findMaterialByName("yellow"))
             data_points.setName("displayMarkerDataPoints")
@@ -112,8 +112,9 @@ class MappingModel(object):
             surfaces.setVisibilityFlag(True)
 
             self._hide_data_projections()
-            scene = self._region.getScene()
 
+    def _create_graphics_projection(self):
+            scene = self._region.getScene()
             data_coordinate_field = self._mapper.get_data_coordinate_field()
             active_data_coordinate_field = self._mapper.get_active_data_point_group_field()
             data_projection_delta_coordinate_field = self._mapper.get_data_projection_delta_coordinate_field()
@@ -135,6 +136,10 @@ class MappingModel(object):
             error_bars.setSpectrum(default_spectrum)
             error_bars.setVisibilityFlag(True)
             self._autorange_spectrum()
+
+    def map(self):
+        self._mapper.map()
+        self._create_graphics_projection()
 
     def write(self):
         self._mapper.write(self._location)
