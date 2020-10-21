@@ -36,7 +36,11 @@ class DataMapWidget(QtGui.QWidget):
         self._done_callback = done_callback
 
     def _make_connections(self):
+        self._ui.mapButton.clicked.connect(self._map_clicked)
         self._ui.doneButton.clicked.connect(self._done_clicked)
+
+    def _map_clicked(self):
+        self._model.map()
 
     def _done_clicked(self):
         self._model.write()
