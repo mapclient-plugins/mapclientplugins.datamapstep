@@ -30,7 +30,7 @@
      </property>
      <property name="minimumSize">
       <size>
-       <width>468</width>
+       <width>474</width>
        <height>135</height>
       </size>
      </property>
@@ -51,7 +51,16 @@
        </sizepolicy>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <item>
@@ -73,8 +82,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>466</width>
-            <height>870</height>
+            <width>472</width>
+            <height>862</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
@@ -160,7 +169,16 @@
                  <enum>QFrame::Raised</enum>
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_8">
-                 <property name="margin">
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
                   <number>0</number>
                  </property>
                  <item>
@@ -195,7 +213,16 @@
                  <enum>QFrame::Raised</enum>
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_10">
-                 <property name="margin">
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
                   <number>0</number>
                  </property>
                  <item>
@@ -244,7 +271,16 @@
                  <enum>QFrame::Raised</enum>
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_6">
-                 <property name="margin">
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
                   <number>0</number>
                  </property>
                  <item>
@@ -305,7 +341,16 @@
                  <enum>QFrame::Raised</enum>
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_4">
-                 <property name="margin">
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
                   <number>0</number>
                  </property>
                  <item>
@@ -353,7 +398,16 @@
                  <enum>QFrame::Raised</enum>
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_5">
-                 <property name="margin">
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
                   <number>0</number>
                  </property>
                  <item>
@@ -401,7 +455,16 @@
                  <enum>QFrame::Raised</enum>
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_3">
-                 <property name="margin">
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
                   <number>0</number>
                  </property>
                  <item>
@@ -468,7 +531,6 @@
               </item>
              </layout>
              <zorder>displayData_frame</zorder>
-             <zorder>mapButton</zorder>
              <zorder>displayNodes_frame</zorder>
              <zorder>displaySurfaces_frame</zorder>
              <zorder>displayLines_frame</zorder>
@@ -485,7 +547,16 @@
               <enum>QFrame::Raised</enum>
              </property>
              <layout class="QGridLayout" name="gridLayout">
-              <property name="margin">
+              <property name="leftMargin">
+               <number>3</number>
+              </property>
+              <property name="topMargin">
+               <number>3</number>
+              </property>
+              <property name="rightMargin">
+               <number>3</number>
+              </property>
+              <property name="bottomMargin">
                <number>3</number>
               </property>
               <item row="0" column="0">
@@ -526,7 +597,7 @@
     </widget>
    </item>
    <item>
-    <widget class="DataMapperSceneviewerWidget" name="sceneviewerWidget" native="true">
+    <widget class="NodeEditorSceneviewerWidget" name="sceneviewerWidget" native="true">
      <property name="enabled">
       <bool>true</bool>
      </property>
@@ -548,9 +619,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>DataMapperSceneviewerWidget</class>
+   <class>NodeEditorSceneviewerWidget</class>
    <extends>QWidget</extends>
-   <header location="global">mapclientplugins\datamapstep\view\nodeeditorsceneviewerwidget.py</header>
+   <header location="global">mapclientplugins/datamapstep/view/nodeeditorsceneviewerwidget</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
