@@ -159,7 +159,7 @@ class Mapper(object):
             nodetemplate.defineField(self._stored_mesh_location_field)
             cache = self._field_module.createFieldcache()
             data_iter = active_datapoints_group.createNodeiterator()
-            datapoint = data_iter.next()
+            datapoint = next(data_iter)
             xi3 = []
             while datapoint.isValid():
                 cache.setNode(datapoint)
@@ -171,7 +171,7 @@ class Mapper(object):
                     result = self._stored_mesh_location_field.assignMeshLocation(cache, element, xi)
                     if result != RESULT_OK:
                         print("Shouldn't be here!")
-                datapoint = data_iter.next()
+                datapoint = next(data_iter)
             # print('end of embedding...')
 
     def write(self, location):
