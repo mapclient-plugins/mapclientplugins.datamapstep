@@ -1,9 +1,9 @@
-from PySide import QtGui, QtCore
+from PySide2 import QtWidgets
 
 from .ui_datamapwidget import Ui_DataMapper
 
 
-class DataMapWidget(QtGui.QWidget):
+class DataMapWidget(QtWidgets.QWidget):
 
     def __init__(self, model, parent=None):
         super(DataMapWidget, self).__init__(parent)

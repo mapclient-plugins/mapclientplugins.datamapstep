@@ -468,7 +468,7 @@
               </item>
              </layout>
              <zorder>displayData_frame</zorder>
-             <zorder>pushButton</zorder>
+             <zorder>mapButton</zorder>
              <zorder>displayNodes_frame</zorder>
              <zorder>displaySurfaces_frame</zorder>
              <zorder>displayLines_frame</zorder>

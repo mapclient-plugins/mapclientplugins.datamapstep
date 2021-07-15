@@ -1,15 +1,15 @@
-
 """
 MAP Client Plugin Step
 """
 import json
 
-from PySide import QtGui
+from PySide2 import QtGui
 
 from mapclient.mountpoints.workflowstep import WorkflowStepMountPoint
 from mapclientplugins.datamapstep.configuredialog import ConfigureDialog
 from mapclientplugins.datamapstep.model.mappingmodel import MappingModel
 from mapclientplugins.datamapstep.view.datamapwidget import DataMapWidget
+
 
 class DataMapStep(WorkflowStepMountPoint):
     """
@@ -19,10 +19,10 @@ class DataMapStep(WorkflowStepMountPoint):
 
     def __init__(self, location):
         super(DataMapStep, self).__init__('Data Map', location)
-        self._configured = False # A step cannot be executed until it has been configured.
+        self._configured = False  # A step cannot be executed until it has been configured.
         self._category = 'Registration'
         # Add any other initialisation code here:
-        self._icon =  QtGui.QImage(':/datamapstep/images/registration.png')
+        self._icon = QtGui.QImage(':/datamapstep/images/registration.png')
         # Ports:
         self.addPort(('http://physiomeproject.org/workflow/1.0/rdf-schema#port',
                       'http://physiomeproject.org/workflow/1.0/rdf-schema#uses',
@@ -71,9 +71,9 @@ class DataMapStep(WorkflowStepMountPoint):
         :param dataIn: The data to set for the port at the given index.
         """
         if index == 0:
-            self._port0_inputZincModelFile = dataIn # http://physiomeproject.org/workflow/1.0/rdf-schema#file_location
+            self._port0_inputZincModelFile = dataIn  # http://physiomeproject.org/workflow/1.0/rdf-schema#file_location
         elif index == 1:
-            self._port1_inputZincDataFile = dataIn # http://physiomeproject.org/workflow/1.0/rdf-schema#file_location
+            self._port1_inputZincDataFile = dataIn  # http://physiomeproject.org/workflow/1.0/rdf-schema#file_location
 
     def getPortData(self, index):
         """
@@ -84,7 +84,7 @@ class DataMapStep(WorkflowStepMountPoint):
         :param index: Index of the port to return.
         """
         # self._port2_outputZincModelFile = self._model.getOutputModelFileName()
-        return self._model_port2_outputZincModelFile # http://physiomeproject.org/workflow/1.0/rdf-schema#file_location
+        return self._model_port2_outputZincModelFile  # http://physiomeproject.org/workflow/1.0/rdf-schema#file_location
 
     def configure(self):
         """
@@ -138,5 +138,3 @@ class DataMapStep(WorkflowStepMountPoint):
         d.identifierOccursCount = self._identifierOccursCount
         d.setConfig(self._config)
         self._configured = d.validate()
-
-
