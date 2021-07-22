@@ -12,10 +12,15 @@ class DataMapWidget(QtWidgets.QWidget):
         self._ui.sceneviewerWidget.setContext(model.get_context())
         self._ui.sceneviewerWidget.graphicsInitialized.connect(self._graphics_initialized)
         self._model = model
+        self._populate_field_combo_boxes()
         self._done_callback = None
         self._make_connections()
 
     def _graphics_initialized(self):
+        self._model.create_graphics()
+        self._graphics_updated()
+
+    def _graphics_updated(self):
         self._scene_changed()
         scene_viewer = self._ui.sceneviewerWidget.getSceneviewer()
         if scene_viewer is not None:
@@ -28,7 +33,6 @@ class DataMapWidget(QtWidgets.QWidget):
     def _scene_changed(self):
         sceneviewer = self._ui.sceneviewerWidget.getSceneviewer()
         if sceneviewer is not None:
-            self._model.create_graphics()
             sceneviewer.setScene(self._model.get_scene())
             self._refresh_graphics()
 
@@ -38,6 +42,8 @@ class DataMapWidget(QtWidgets.QWidget):
     def _make_connections(self):
         self._ui.mapButton.clicked.connect(self._map_clicked)
         self._ui.doneButton.clicked.connect(self._done_clicked)
+        self._ui.model_field_comboBox.currentTextChanged.connect(self._model_field_chosen)
+        self._ui.data_field_comboBox.currentTextChanged.connect(self._data_field_chosen)
 
     def _map_clicked(self):
         self._model.map()
@@ -45,3 +51,16 @@ class DataMapWidget(QtWidgets.QWidget):
     def _done_clicked(self):
         self._model.write()
         self._done_callback()
+
+    def _populate_field_combo_boxes(self):
+        field_list = self._model.get_field_list()
+        self._ui.model_field_comboBox.addItems(field_list)
+        self._ui.data_field_comboBox.addItems(field_list)
+
+    def _model_field_chosen(self):
+        self._model.update_model_coordinates_field(self._ui.model_field_comboBox.currentText())
+        self._graphics_updated()
+
+    def _data_field_chosen(self):
+        self._model.update_data_coordinates_field(self._ui.data_field_comboBox.currentText())
+        self._graphics_updated()
