@@ -58,11 +58,6 @@ class Mapper(object):
     # combo_box.setPlaceholderText() is currently broken. If this method gets fixed we should update (simplify) the
     # following two methods by removing the dummy elements (---) and using setPlaceholderText in datamapwidget.py.
     def update_model_coordinates_field(self, field_name):
-        if field_name == "---":
-            self._data_coordinates_field_name = None
-            self._data_coordinates_field = None
-            return
-
         self._model_coordinates_field_name = field_name
 
         field = self._field_module.findFieldByName(self._model_coordinates_field_name)
@@ -74,11 +69,6 @@ class Mapper(object):
         self._model_coordinates_field = finite_element_field
 
     def update_data_coordinates_field(self, field_name):
-        if field_name == "---":
-            self._data_coordinates_field_name = None
-            self._data_coordinates_field = None
-            return
-
         self._data_coordinates_field_name = field_name
 
         with ChangeManager(self._field_module):

@@ -142,23 +142,37 @@ class MappingModel(object):
         return self._mapper.get_field_list()
 
     def update_model_coordinates_field(self, field_name):
+        scene = self._region.getScene()
+        lines = scene.findGraphicsByName("displayLines").castLines()
+        surfaces = scene.findGraphicsByName("displaySurfaces").castSurfaces()
+
+        if field_name == "---":
+            lines.setVisibilityFlag(False)
+            surfaces.setVisibilityFlag(False)
+            return
+
         try:
             self._mapper.update_model_coordinates_field(field_name)
         except ValueError as e:
             raise e
         model_coordinates = self._mapper.get_model_coordinate_field()
-        scene = self._region.getScene()
-        lines = scene.findGraphicsByName("displayLines").castLines()
         lines.setCoordinateField(model_coordinates)
-        surfaces = scene.findGraphicsByName("displaySurfaces").castSurfaces()
         surfaces.setCoordinateField(model_coordinates)
+        lines.setVisibilityFlag(True)
+        surfaces.setVisibilityFlag(True)
 
     def update_data_coordinates_field(self, field_name):
+        scene = self._region.getScene()
+        data_points = scene.findGraphicsByName("displayMarkerDataPoints").castPoints()
+
+        if field_name == "---":
+            data_points.setVisibilityFlag(False)
+            return
+
         try:
             self._mapper.update_data_coordinates_field(field_name)
         except ValueError as e:
             raise e
         data_coordinate = self._mapper.get_data_coordinate_field()
-        scene = self._region.getScene()
-        data_points = scene.findGraphicsByName("displayMarkerDataPoints").castPoints()
         data_points.setCoordinateField(data_coordinate)
+        data_points.setVisibilityFlag(True)

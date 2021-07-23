@@ -63,6 +63,8 @@ class DataMapWidget(QtWidgets.QWidget):
             self._model.update_model_coordinates_field(self._ui.model_field_comboBox.currentText())
         except ValueError as e:
             QtWidgets.QMessageBox.warning(self, 'Warning', str(e))
+            self._ui.model_field_comboBox.setCurrentIndex(0)
+            self._model.update_model_coordinates_field(self._ui.model_field_comboBox.currentText())
         self._graphics_updated()
 
     def _data_field_chosen(self):
@@ -70,4 +72,6 @@ class DataMapWidget(QtWidgets.QWidget):
             self._model.update_data_coordinates_field(self._ui.data_field_comboBox.currentText())
         except ValueError as e:
             QtWidgets.QMessageBox.warning(self, 'Warning', str(e))
+            self._ui.data_field_comboBox.setCurrentIndex(0)
+            self._model.update_data_coordinates_field(self._ui.data_field_comboBox.currentText())
         self._graphics_updated()
