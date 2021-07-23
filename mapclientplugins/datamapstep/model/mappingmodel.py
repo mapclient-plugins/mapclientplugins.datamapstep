@@ -142,7 +142,10 @@ class MappingModel(object):
         return self._mapper.get_field_list()
 
     def update_model_coordinates_field(self, field_name):
-        self._mapper.update_model_coordinates_field(field_name)
+        try:
+            self._mapper.update_model_coordinates_field(field_name)
+        except ValueError as e:
+            raise e
         model_coordinates = self._mapper.get_model_coordinate_field()
         scene = self._region.getScene()
         lines = scene.findGraphicsByName("displayLines").castLines()
@@ -151,7 +154,10 @@ class MappingModel(object):
         surfaces.setCoordinateField(model_coordinates)
 
     def update_data_coordinates_field(self, field_name):
-        self._mapper.update_data_coordinates_field(field_name)
+        try:
+            self._mapper.update_data_coordinates_field(field_name)
+        except ValueError as e:
+            raise e
         data_coordinate = self._mapper.get_data_coordinate_field()
         scene = self._region.getScene()
         data_points = scene.findGraphicsByName("displayMarkerDataPoints").castPoints()

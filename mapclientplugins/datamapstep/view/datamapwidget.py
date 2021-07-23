@@ -54,13 +54,20 @@ class DataMapWidget(QtWidgets.QWidget):
 
     def _populate_field_combo_boxes(self):
         field_list = self._model.get_field_list()
+        field_list = ["---"] + field_list
         self._ui.model_field_comboBox.addItems(field_list)
         self._ui.data_field_comboBox.addItems(field_list)
 
     def _model_field_chosen(self):
-        self._model.update_model_coordinates_field(self._ui.model_field_comboBox.currentText())
+        try:
+            self._model.update_model_coordinates_field(self._ui.model_field_comboBox.currentText())
+        except ValueError as e:
+            QtWidgets.QMessageBox.warning(self, 'Warning', str(e))
         self._graphics_updated()
 
     def _data_field_chosen(self):
-        self._model.update_data_coordinates_field(self._ui.data_field_comboBox.currentText())
+        try:
+            self._model.update_data_coordinates_field(self._ui.data_field_comboBox.currentText())
+        except ValueError as e:
+            QtWidgets.QMessageBox.warning(self, 'Warning', str(e))
         self._graphics_updated()

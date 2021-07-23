@@ -55,15 +55,30 @@ class Mapper(object):
     def get_marker_group(self):
         return self._marker_group
 
+    # combo_box.setPlaceholderText() is currently broken. If this method gets fixed we should update (simplify) the
+    # following two methods by removing the dummy elements (---) and using setPlaceholderText in datamapwidget.py.
     def update_model_coordinates_field(self, field_name):
+        if field_name == "---":
+            self._data_coordinates_field_name = None
+            self._data_coordinates_field = None
+            return
+
         self._model_coordinates_field_name = field_name
 
         field = self._field_module.findFieldByName(self._model_coordinates_field_name)
         finite_element_field = field.castFiniteElement()
-        assert finite_element_field.isValid() and (finite_element_field.getNumberOfComponents() == 3)
+        if not (finite_element_field.isValid() and (finite_element_field.getNumberOfComponents() == 3)):
+            self._data_coordinates_field_name = None
+            self._data_coordinates_field = None
+            raise ValueError("The selected model coordinates field is not valid.")
         self._model_coordinates_field = finite_element_field
 
     def update_data_coordinates_field(self, field_name):
+        if field_name == "---":
+            self._data_coordinates_field_name = None
+            self._data_coordinates_field = None
+            return
+
         self._data_coordinates_field_name = field_name
 
         with ChangeManager(self._field_module):
@@ -75,7 +90,10 @@ class Mapper(object):
             active_datapoints_group.addNodesConditional(tmp_true)
 
         field = self._field_module.findFieldByName(self._data_coordinates_field_name)
-        assert field.isValid()
+        if not field.isValid():
+            self._data_coordinates_field_name = None
+            self._data_coordinates_field = None
+            raise ValueError("The selected data coordinates field is not valid.")
         self._data_coordinates_field = field
 
     def get_field_list(self):
