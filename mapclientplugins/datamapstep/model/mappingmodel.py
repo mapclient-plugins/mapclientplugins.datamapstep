@@ -85,7 +85,6 @@ class MappingModel(object):
             data_points = self._scene.createGraphicsPoints()
             data_points.setFieldDomainType(Field.DOMAIN_TYPE_DATAPOINTS)
             point_attr = data_points.getGraphicspointattributes()
-            point_attr.setBaseSize([200, 200, 200])
             point_attr.setGlyphShapeType(Glyph.SHAPE_TYPE_SPHERE)
             data_points.setMaterial(self._material_module.findMaterialByName("yellow"))
             data_points.setName("displayMarkerDataPoints")
@@ -151,10 +150,7 @@ class MappingModel(object):
             surfaces.setVisibilityFlag(False)
             return
 
-        try:
-            self._mapper.update_model_coordinates_field(field_name)
-        except ValueError as e:
-            raise e
+        self._mapper.update_model_coordinates_field(field_name)
         model_coordinates = self._mapper.get_model_coordinate_field()
         lines.setCoordinateField(model_coordinates)
         surfaces.setCoordinateField(model_coordinates)
@@ -171,8 +167,14 @@ class MappingModel(object):
 
         try:
             self._mapper.update_data_coordinates_field(field_name)
-        except ValueError as e:
+        except Exception as e:
             raise e
         data_coordinate = self._mapper.get_data_coordinate_field()
         data_points.setCoordinateField(data_coordinate)
         data_points.setVisibilityFlag(True)
+
+    def update_glyph_size(self, glyph_size):
+        scene = self._region.getScene()
+        data_points = scene.findGraphicsByName("displayMarkerDataPoints").castPoints()
+        point_attr = data_points.getGraphicspointattributes()
+        point_attr.setBaseSize([glyph_size, glyph_size, glyph_size])

@@ -14,11 +14,12 @@ class DataMapWidget(QtWidgets.QWidget):
         self._model = model
         self._populate_field_combo_boxes()
         self._done_callback = None
+        self._glyph_size_changed()
         self._make_connections()
 
     def _graphics_initialized(self):
         self._model.create_graphics()
-        self._graphics_updated()
+        self._glyph_size_changed()
 
     def _graphics_updated(self):
         self._scene_changed()
@@ -44,6 +45,7 @@ class DataMapWidget(QtWidgets.QWidget):
         self._ui.doneButton.clicked.connect(self._done_clicked)
         self._ui.model_field_comboBox.currentTextChanged.connect(self._model_field_chosen)
         self._ui.data_field_comboBox.currentTextChanged.connect(self._data_field_chosen)
+        self._ui.glyph_size_spinBox.valueChanged.connect(self._glyph_size_changed)
 
     def _map_clicked(self):
         self._model.map()
@@ -61,7 +63,7 @@ class DataMapWidget(QtWidgets.QWidget):
     def _model_field_chosen(self):
         try:
             self._model.update_model_coordinates_field(self._ui.model_field_comboBox.currentText())
-        except ValueError as e:
+        except Exception as e:
             QtWidgets.QMessageBox.warning(self, 'Warning', str(e))
             self._ui.model_field_comboBox.setCurrentIndex(0)
             self._model.update_model_coordinates_field(self._ui.model_field_comboBox.currentText())
@@ -70,8 +72,12 @@ class DataMapWidget(QtWidgets.QWidget):
     def _data_field_chosen(self):
         try:
             self._model.update_data_coordinates_field(self._ui.data_field_comboBox.currentText())
-        except ValueError as e:
+        except Exception as e:
             QtWidgets.QMessageBox.warning(self, 'Warning', str(e))
             self._ui.data_field_comboBox.setCurrentIndex(0)
             self._model.update_data_coordinates_field(self._ui.data_field_comboBox.currentText())
+        self._graphics_updated()
+
+    def _glyph_size_changed(self):
+        self._model.update_glyph_size(self._ui.glyph_size_spinBox.value())
         self._graphics_updated()

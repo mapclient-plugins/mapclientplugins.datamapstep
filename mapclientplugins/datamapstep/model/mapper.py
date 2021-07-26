@@ -58,19 +58,11 @@ class Mapper(object):
     # combo_box.setPlaceholderText() is currently broken. If this method gets fixed we should update (simplify) the
     # following two methods by removing the dummy elements (---) and using setPlaceholderText in datamapwidget.py.
     def update_model_coordinates_field(self, field_name):
-        self._model_coordinates_field_name = field_name
-
-        field = self._field_module.findFieldByName(self._model_coordinates_field_name)
+        field = self._field_module.findFieldByName(field_name)
         finite_element_field = field.castFiniteElement()
-        if not (finite_element_field.isValid() and (finite_element_field.getNumberOfComponents() == 3)):
-            self._data_coordinates_field_name = None
-            self._data_coordinates_field = None
-            raise ValueError("The selected model coordinates field is not valid.")
         self._model_coordinates_field = finite_element_field
 
     def update_data_coordinates_field(self, field_name):
-        self._data_coordinates_field_name = field_name
-
         with ChangeManager(self._field_module):
             data_points = self._field_module.findNodesetByFieldDomainType(Field.DOMAIN_TYPE_DATAPOINTS)
 
@@ -79,11 +71,7 @@ class Mapper(object):
             active_datapoints_group = self._active_data_point_group_field.getNodesetGroup()
             active_datapoints_group.addNodesConditional(tmp_true)
 
-        field = self._field_module.findFieldByName(self._data_coordinates_field_name)
-        if not field.isValid():
-            self._data_coordinates_field_name = None
-            self._data_coordinates_field = None
-            raise ValueError("The selected data coordinates field is not valid.")
+        field = self._field_module.findFieldByName(field_name)
         self._data_coordinates_field = field
 
     def get_field_list(self):
@@ -92,7 +80,7 @@ class Mapper(object):
         field_iterator = self._field_module.createFielditerator()
         field = field_iterator.next()
         while field.isValid():
-            if field.isManaged():
+            if field.isTypeCoordinate() and (field.getNumberOfComponents() == 3) and (field.castFiniteElement().isValid()):
                 field_list.append(field.getName())
             field = field_iterator.next()
 

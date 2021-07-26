@@ -320,12 +320,41 @@ class Ui_DataMapper(object):
 
         self.verticalLayout_3.addWidget(self.displaySurfaces_frame)
 
+        self.displaySurfaces_frame_2 = QFrame(self.groupBox)
+        self.displaySurfaces_frame_2.setObjectName(u"displaySurfaces_frame_2")
+        self.displaySurfaces_frame_2.setFrameShape(QFrame.StyledPanel)
+        self.displaySurfaces_frame_2.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_9 = QHBoxLayout(self.displaySurfaces_frame_2)
+        self.horizontalLayout_9.setObjectName(u"horizontalLayout_9")
+        self.horizontalLayout_9.setContentsMargins(0, 0, 0, 0)
+        self.label = QLabel(self.displaySurfaces_frame_2)
+        self.label.setObjectName(u"label")
+
+        self.horizontalLayout_9.addWidget(self.label)
+
+        self.glyph_size_spinBox = QSpinBox(self.displaySurfaces_frame_2)
+        self.glyph_size_spinBox.setObjectName(u"glyph_size_spinBox")
+        self.glyph_size_spinBox.setMinimum(10)
+        self.glyph_size_spinBox.setMaximum(1000)
+        self.glyph_size_spinBox.setSingleStep(10)
+        self.glyph_size_spinBox.setValue(100)
+
+        self.horizontalLayout_9.addWidget(self.glyph_size_spinBox)
+
+        self.horizontalSpacer_3 = QSpacerItem(216, 20, QSizePolicy.Fixed, QSizePolicy.Minimum)
+
+        self.horizontalLayout_9.addItem(self.horizontalSpacer_3)
+
+
+        self.verticalLayout_3.addWidget(self.displaySurfaces_frame_2)
+
         self.displayData_frame.raise_()
         self.displayNodes_frame.raise_()
         self.displaySurfaces_frame.raise_()
         self.displayLines_frame.raise_()
         self.displayElements_frame.raise_()
         self.displayMisc_frame.raise_()
+        self.displaySurfaces_frame_2.raise_()
 
         self.verticalLayout.addWidget(self.groupBox)
 
@@ -401,6 +430,7 @@ class Ui_DataMapper(object):
         self.displaySurfacesExterior_checkBox.setText(QCoreApplication.translate("DataMapper", u"Exterior", None))
         self.displaySurfacesTranslucent_checkBox.setText(QCoreApplication.translate("DataMapper", u"Transluc.", None))
         self.displaySurfacesWireframe_checkBox.setText(QCoreApplication.translate("DataMapper", u"Wireframe", None))
+        self.label.setText(QCoreApplication.translate("DataMapper", u"Data point glyph size:", None))
 #if QT_CONFIG(tooltip)
         self.viewAllButton.setToolTip(QCoreApplication.translate("DataMapper", u"Adjust the view to see the whole model", None))
 #endif // QT_CONFIG(tooltip)
