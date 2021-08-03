@@ -1,5 +1,3 @@
-import os
-
 from opencmiss.zinc.field import Field
 from opencmiss.zinc.glyph import Glyph
 from opencmiss.zinc.graphics import Graphics
@@ -81,29 +79,24 @@ class MappingModel(object):
         spectrum.autorange(scene, scene_filter)
 
     def create_graphics(self):
-        model_coordinates = self._mapper.get_model_coordinate_field()
-        data_coordinate = self._mapper.get_data_coordinate_field()
         with ChangeManager(self._scene):
             self._scene.removeAllGraphics()
+
             data_points = self._scene.createGraphicsPoints()
             data_points.setFieldDomainType(Field.DOMAIN_TYPE_DATAPOINTS)
-            data_points.setCoordinateField(data_coordinate)
             point_attr = data_points.getGraphicspointattributes()
-            point_attr.setBaseSize([10, 10, 10])
             point_attr.setGlyphShapeType(Glyph.SHAPE_TYPE_SPHERE)
             data_points.setMaterial(self._material_module.findMaterialByName("yellow"))
             data_points.setName("displayMarkerDataPoints")
             data_points.setVisibilityFlag(True)
 
             lines = self._scene.createGraphicsLines()
-            lines.setCoordinateField(model_coordinates)
             lines.setExterior(True)
             lines.setName("displayLines")
             lines.setVisibilityFlag(True)
 
             mesh_dimension = 2
             surfaces = self._scene.createGraphicsSurfaces()
-            surfaces.setCoordinateField(model_coordinates)
             surfaces.setRenderPolygonMode(Graphics.RENDER_POLYGON_MODE_SHADED)
             surfaces.setExterior(True if (mesh_dimension == 3) else False)
             surfaces_material = self._material_module.findMaterialByName("trans_blue")
@@ -114,28 +107,28 @@ class MappingModel(object):
             self._hide_data_projections()
 
     def _create_graphics_projection(self):
-            scene = self._region.getScene()
-            data_coordinate_field = self._mapper.get_data_coordinate_field()
-            active_data_coordinate_field = self._mapper.get_active_data_point_group_field()
-            data_projection_delta_coordinate_field = self._mapper.get_data_projection_delta_coordinate_field()
-            data_projection_error_field = self._mapper.get_data_projection_error_field()
-            spectrum_module = scene.getSpectrummodule()
-            default_spectrum = spectrum_module.getDefaultSpectrum()
+        scene = self._region.getScene()
+        data_coordinate_field = self._mapper.get_data_coordinate_field()
+        active_data_coordinate_field = self._mapper.get_active_data_point_group_field()
+        data_projection_delta_coordinate_field = self._mapper.get_data_projection_delta_coordinate_field()
+        data_projection_error_field = self._mapper.get_data_projection_error_field()
+        spectrum_module = scene.getSpectrummodule()
+        default_spectrum = spectrum_module.getDefaultSpectrum()
 
-            error_bars = scene.createGraphicsPoints()
-            error_bars.setName('data-projections')
-            error_bars.setFieldDomainType(Field.DOMAIN_TYPE_DATAPOINTS)
-            error_bars.setCoordinateField(data_coordinate_field)
-            # error_bars.setSubgroupField(active_data_coordinate_field)
-            point_attr = error_bars.getGraphicspointattributes()
-            point_attr.setGlyphShapeType(Glyph.SHAPE_TYPE_LINE)
-            point_attr.setBaseSize([0.0, 1.0, 1.0])
-            point_attr.setScaleFactors([1.0, 0.0, 0.0])
-            point_attr.setOrientationScaleField(data_projection_delta_coordinate_field)
-            error_bars.setDataField(data_projection_error_field)
-            error_bars.setSpectrum(default_spectrum)
-            error_bars.setVisibilityFlag(True)
-            self._autorange_spectrum()
+        error_bars = scene.createGraphicsPoints()
+        error_bars.setName('data-projections')
+        error_bars.setFieldDomainType(Field.DOMAIN_TYPE_DATAPOINTS)
+        error_bars.setCoordinateField(data_coordinate_field)
+        # error_bars.setSubgroupField(active_data_coordinate_field)
+        point_attr = error_bars.getGraphicspointattributes()
+        point_attr.setGlyphShapeType(Glyph.SHAPE_TYPE_LINE)
+        point_attr.setBaseSize([0.0, 1.0, 1.0])
+        point_attr.setScaleFactors([1.0, 0.0, 0.0])
+        point_attr.setOrientationScaleField(data_projection_delta_coordinate_field)
+        error_bars.setDataField(data_projection_error_field)
+        error_bars.setSpectrum(default_spectrum)
+        error_bars.setVisibilityFlag(True)
+        self._autorange_spectrum()
 
     def map(self):
         self._mapper.map()
@@ -143,3 +136,45 @@ class MappingModel(object):
 
     def write(self):
         self._mapper.write(self._location)
+
+    def get_field_list(self):
+        return self._mapper.get_field_list()
+
+    def update_model_coordinates_field(self, field_name):
+        scene = self._region.getScene()
+        lines = scene.findGraphicsByName("displayLines").castLines()
+        surfaces = scene.findGraphicsByName("displaySurfaces").castSurfaces()
+
+        if field_name == "---":
+            lines.setVisibilityFlag(False)
+            surfaces.setVisibilityFlag(False)
+            return
+
+        self._mapper.update_model_coordinates_field(field_name)
+        model_coordinates = self._mapper.get_model_coordinate_field()
+        lines.setCoordinateField(model_coordinates)
+        surfaces.setCoordinateField(model_coordinates)
+        lines.setVisibilityFlag(True)
+        surfaces.setVisibilityFlag(True)
+
+    def update_data_coordinates_field(self, field_name):
+        scene = self._region.getScene()
+        data_points = scene.findGraphicsByName("displayMarkerDataPoints").castPoints()
+
+        if field_name == "---":
+            data_points.setVisibilityFlag(False)
+            return
+
+        try:
+            self._mapper.update_data_coordinates_field(field_name)
+        except Exception as e:
+            raise e
+        data_coordinate = self._mapper.get_data_coordinate_field()
+        data_points.setCoordinateField(data_coordinate)
+        data_points.setVisibilityFlag(True)
+
+    def update_glyph_size(self, glyph_size):
+        scene = self._region.getScene()
+        data_points = scene.findGraphicsByName("displayMarkerDataPoints").castPoints()
+        point_attr = data_points.getGraphicspointattributes()
+        point_attr.setBaseSize([glyph_size, glyph_size, glyph_size])

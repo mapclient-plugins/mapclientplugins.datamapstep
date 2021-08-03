@@ -14,9 +14,9 @@ class Mapper(object):
         self._region = None
         self._field_module = None
         self._model_coordinates_field = None
-        self._model_coordinates_field_name = 'coordinates'
+        self._model_coordinates_field_name = None
         self._data_coordinates_field = None
-        self._data_coordinates_field_name = 'data_coordinates'
+        self._data_coordinates_field_name = None
         self._find_mesh_location_field = None
         self._stored_mesh_location_field = None
         self._active_data_point_group_field = None
@@ -55,6 +55,37 @@ class Mapper(object):
     def get_marker_group(self):
         return self._marker_group
 
+    # combo_box.setPlaceholderText() is currently broken. If this method gets fixed we should update (simplify) the
+    # following two methods by removing the dummy elements (---) and using setPlaceholderText in datamapwidget.py.
+    def update_model_coordinates_field(self, field_name):
+        field = self._field_module.findFieldByName(field_name)
+        finite_element_field = field.castFiniteElement()
+        self._model_coordinates_field = finite_element_field
+
+    def update_data_coordinates_field(self, field_name):
+        with ChangeManager(self._field_module):
+            data_points = self._field_module.findNodesetByFieldDomainType(Field.DOMAIN_TYPE_DATAPOINTS)
+
+            self._active_data_point_group_field = self._field_module.createFieldNodeGroup(data_points)
+            tmp_true = self._field_module.createFieldConstant([1])
+            active_datapoints_group = self._active_data_point_group_field.getNodesetGroup()
+            active_datapoints_group.addNodesConditional(tmp_true)
+
+        field = self._field_module.findFieldByName(field_name)
+        self._data_coordinates_field = field
+
+    def get_field_list(self):
+        field_list = []
+
+        field_iterator = self._field_module.createFielditerator()
+        field = field_iterator.next()
+        while field.isValid():
+            if field.isTypeCoordinate() and (field.getNumberOfComponents() == 3) and (field.castFiniteElement().isValid()):
+                field_list.append(field.getName())
+            field = field_iterator.next()
+
+        return field_list
+
     def load(self):
         self._region = self._context.createRegion()
         self._field_module = self._region.getFieldmodule()
@@ -66,10 +97,6 @@ class Mapper(object):
         result = self._region.readFile(self._zinc_model_file_name)
         assert result == RESULT_OK, "Failed to load model file" + str(self._zinc_model_file_name)
         self._mesh = [self._field_module.findMeshByDimension(d + 1) for d in range(3)]
-        field = self._field_module.findFieldByName(self._model_coordinates_field_name)
-        finite_element_field = field.castFiniteElement()
-        assert finite_element_field.isValid() and (finite_element_field.getNumberOfComponents() == 3)
-        self._model_coordinates_field = finite_element_field
 
     def _load_data(self):
         sir = self._region.createStreaminformationRegion()
@@ -77,15 +104,6 @@ class Mapper(object):
         sir.setResourceDomainTypes(data_resource, Field.DOMAIN_TYPE_NODES)
         result = self._region.read(sir)
         assert result == RESULT_OK, "Failed to load data file" + str(self._zinc_data_file_name)
-        with ChangeManager(self._field_module):
-            # model_group_names = [group.getName() for group in getGroupList(self._field_module)]
-            data_points = self._field_module.findNodesetByFieldDomainType(Field.DOMAIN_TYPE_DATAPOINTS)
-            self._active_data_point_group_field = self._field_module.createFieldNodeGroup(data_points)
-            tmp_true = self._field_module.createFieldConstant([1])
-            active_datapoints_group = self._active_data_point_group_field.getNodesetGroup()
-            active_datapoints_group.addNodesConditional(tmp_true)
-
-        self._data_coordinates_field = self._field_module.findFieldByName("data_coordinates")
 
     def get_highest_dimension_mesh(self):
         for d in range(2, -1, -1):
@@ -114,7 +132,7 @@ class Mapper(object):
     def _calculate_data_projections(self):
         self._get_project_face_mesh_group()
 
-        mesh2d = self._exterior_face_mesh_group.getMasterMesh()
+        # mesh2d = self._exterior_face_mesh_group.getMasterMesh()
         mesh3d = self.get_highest_dimension_mesh()
 
         if self._find_mesh_location_field is None and self._exterior_face_mesh_group is not None:
