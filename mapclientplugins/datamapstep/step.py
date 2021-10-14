@@ -6,7 +6,7 @@ import json
 from PySide2 import QtGui
 
 from mapclient.mountpoints.workflowstep import WorkflowStepMountPoint
-from mapclientplugins.datamapstep.configuredialog import ConfigureDialog
+# from mapclientplugins.datamapstep.configuredialog import ConfigureDialog
 from mapclientplugins.datamapstep.model.mappingmodel import MappingModel
 from mapclientplugins.datamapstep.view.datamapwidget import DataMapWidget
 
@@ -19,7 +19,7 @@ class DataMapStep(WorkflowStepMountPoint):
 
     def __init__(self, location):
         super(DataMapStep, self).__init__('Data Map', location)
-        self._configured = False  # A step cannot be executed until it has been configured.
+        self._configured = True
         self._category = 'Registration'
         # Add any other initialisation code here:
         self._icon = QtGui.QImage(':/datamapstep/images/registration.png')
@@ -94,17 +94,7 @@ class DataMapStep(WorkflowStepMountPoint):
         then set:
             self._configured = True
         """
-        dlg = ConfigureDialog(self._main_window)
-        dlg.identifierOccursCount = self._identifierOccursCount
-        dlg.setConfig(self._config)
-        dlg.validate()
-        dlg.setModal(True)
-
-        if dlg.exec_():
-            self._config = dlg.getConfig()
-
-        self._configured = dlg.validate()
-        self._configuredObserver()
+        pass
 
     def getIdentifier(self):
         """
@@ -123,7 +113,7 @@ class DataMapStep(WorkflowStepMountPoint):
         Add code to serialize this step to string.  This method should
         implement the opposite of 'deserialize'.
         """
-        return json.dumps(self._config, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+        pass
 
     def deserialize(self, string):
         """
@@ -132,9 +122,4 @@ class DataMapStep(WorkflowStepMountPoint):
 
         :param string: JSON representation of the configuration in a string.
         """
-        self._config.update(json.loads(string))
-
-        d = ConfigureDialog()
-        d.identifierOccursCount = self._identifierOccursCount
-        d.setConfig(self._config)
-        self._configured = d.validate()
+        pass
