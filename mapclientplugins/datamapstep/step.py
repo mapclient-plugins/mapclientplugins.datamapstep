@@ -37,9 +37,8 @@ class DataMapStep(WorkflowStepMountPoint):
         self._port0_inputZincModelFile = None  # http://physiomeproject.org/workflow/1.0/rdf-schema#file_location
         self._port1_inputZincDataFile = None  # http://physiomeproject.org/workflow/1.0/rdf-schema#file_location
         self._port2_outputZincModelFile = None  # http://physiomeproject.org/workflow/1.0/rdf-schema#file_location
-        # Config:
-        self._config = {}
-        self._config['identifier'] = ''
+        self._identifier = ''
+
         self._model = None
         self._view = None
 
@@ -100,13 +99,13 @@ class DataMapStep(WorkflowStepMountPoint):
         """
         The identifier is a string that must be unique within a workflow.
         """
-        return self._config['identifier']
+        return self._identifier
 
     def setIdentifier(self, identifier):
         """
         The framework will set the identifier for this step when it is loaded.
         """
-        self._config['identifier'] = identifier
+        self._identifier = identifier
 
     def serialize(self):
         """
