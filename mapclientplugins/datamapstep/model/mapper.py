@@ -1,8 +1,8 @@
-from opencmiss.zinc.context import Context
-from opencmiss.utils.zinc.general import ChangeManager
-from opencmiss.zinc.field import Field, FieldFindMeshLocation
-from opencmiss.zinc.element import Element
-from opencmiss.zinc.result import RESULT_OK
+from cmlibs.zinc.context import Context
+from cmlibs.utils.zinc.general import ChangeManager
+from cmlibs.zinc.field import Field, FieldFindMeshLocation
+from cmlibs.zinc.element import Element
+from cmlibs.zinc.result import RESULT_OK
 
 
 class Mapper(object):

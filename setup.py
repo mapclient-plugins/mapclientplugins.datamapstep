@@ -16,11 +16,11 @@ def readfile(filename, split=False):
 plugin_readme = readfile("README.rst", split=True)[3:]  # skip title
 plugin_license = readfile("LICENSE")
 plugin_dependencies = [
-    "setuptools",
+    "cmlibs.utils",
+    "cmlibs.widgets"
+    "cmlibs.zinc",
     "PySide6",
-    "opencmiss.utils",
-    "opencmiss.zinc",
-    "opencmiss.zincwidgets"
+    "setuptools",
 ]
 
 

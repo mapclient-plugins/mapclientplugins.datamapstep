@@ -1,8 +1,8 @@
-from opencmiss.zinc.field import Field
-from opencmiss.zinc.glyph import Glyph
-from opencmiss.zinc.graphics import Graphics
-from opencmiss.zinc.material import Material
-from opencmiss.utils.zinc.general import ChangeManager
+from cmlibs.zinc.field import Field
+from cmlibs.zinc.glyph import Glyph
+from cmlibs.zinc.graphics import Graphics
+from cmlibs.zinc.material import Material
+from cmlibs.utils.zinc.general import ChangeManager
 
 from .mapper import Mapper
 
