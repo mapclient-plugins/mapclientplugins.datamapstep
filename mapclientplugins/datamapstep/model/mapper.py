@@ -1,5 +1,6 @@
 from cmlibs.zinc.context import Context
 from cmlibs.utils.zinc.general import ChangeManager
+from cmlibs.utils.zinc.finiteelement import get_highest_dimension_mesh
 from cmlibs.zinc.field import Field, FieldFindMeshLocation
 from cmlibs.zinc.element import Element
 from cmlibs.zinc.result import RESULT_OK
@@ -105,13 +106,6 @@ class Mapper(object):
         result = self._region.read(sir)
         assert result == RESULT_OK, "Failed to load data file" + str(self._zinc_data_file_name)
 
-    def get_highest_dimension_mesh(self):
-        for d in range(2, -1, -1):
-            m = self._mesh[d]
-            if m.getSize() > 0:
-                return m
-        return None
-
     def _get_project_face_mesh_group(self):
         fm = self._region.getFieldmodule()
         mesh2d = fm.findMeshByDimension(2)
@@ -133,7 +127,7 @@ class Mapper(object):
         self._get_project_face_mesh_group()
 
         # mesh2d = self._exterior_face_mesh_group.getMasterMesh()
-        mesh3d = self.get_highest_dimension_mesh()
+        mesh3d = get_highest_dimension_mesh(self._field_module)
 
         if self._find_mesh_location_field is None and self._exterior_face_mesh_group is not None:
             self._find_mesh_location_field = self._field_module.createFieldFindMeshLocation(
