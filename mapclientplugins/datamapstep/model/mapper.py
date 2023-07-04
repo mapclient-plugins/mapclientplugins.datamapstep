@@ -66,9 +66,9 @@ class Mapper(object):
         with ChangeManager(self._field_module):
             data_points = self._field_module.findNodesetByFieldDomainType(Field.DOMAIN_TYPE_DATAPOINTS)
 
-            self._active_data_point_group_field = self._field_module.createFieldNodeGroup(data_points)
+            field_group = self._field_module.createFieldGroup()
             tmp_true = self._field_module.createFieldConstant([1])
-            active_datapoints_group = self._active_data_point_group_field.getNodesetGroup()
+            active_datapoints_group = field_group.createNodesetGroup(data_points)
             active_datapoints_group.addNodesConditional(tmp_true)
 
         field = self._field_module.findFieldByName(field_name)
@@ -121,9 +121,9 @@ class Mapper(object):
         is_both = fm.createFieldAnd(is_exterior, is_on_face_xi3_1)
         self._exterior_surface_field = is_both
 
-        self._exterior_face_group = fm.createFieldElementGroup(mesh2d)
-        self._exterior_face_group.setName('exteriorFaceElementGroup')
-        self._exterior_face_mesh_group = self._exterior_face_group.getMeshGroup()
+        field_group = self._field_module.createFieldGroup()
+        field_group.setName('exteriorFaceElementGroup')
+        self._exterior_face_mesh_group = field_group.createMeshGroup(mesh2d)
         result = self._exterior_face_mesh_group.addElementsConditional(is_both)
 
     def map(self):
@@ -156,9 +156,9 @@ class Mapper(object):
                 raise ValueError('Failed to create stored mesh location field.')
 
         datapoints = self._field_module.findNodesetByFieldDomainType(Field.DOMAIN_TYPE_DATAPOINTS)
-        self._activeDataPointGroupField = self._field_module.createFieldNodeGroup(datapoints)
+        field_group = self._field_module.createFieldGroup()
         tmp_true = self._field_module.createFieldConstant([1])
-        active_datapoints_group = self._activeDataPointGroupField.getNodesetGroup()
+        active_datapoints_group = field_group.createNodesetGroup(datapoints)
         active_datapoints_group.addNodesConditional(tmp_true)
         dimension = mesh3d.getDimension()
 
