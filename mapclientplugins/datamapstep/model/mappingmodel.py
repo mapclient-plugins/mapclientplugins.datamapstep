@@ -109,7 +109,6 @@ class MappingModel(object):
     def _create_graphics_projection(self):
         scene = self._region.getScene()
         data_coordinate_field = self._mapper.get_data_coordinate_field()
-        active_data_coordinate_field = self._mapper.get_active_data_point_group_field()
         data_projection_delta_coordinate_field = self._mapper.get_data_projection_delta_coordinate_field()
         data_projection_error_field = self._mapper.get_data_projection_error_field()
         spectrum_module = scene.getSpectrummodule()
@@ -119,7 +118,6 @@ class MappingModel(object):
         error_bars.setName('data-projections')
         error_bars.setFieldDomainType(Field.DOMAIN_TYPE_DATAPOINTS)
         error_bars.setCoordinateField(data_coordinate_field)
-        # error_bars.setSubgroupField(active_data_coordinate_field)
         point_attr = error_bars.getGraphicspointattributes()
         point_attr.setGlyphShapeType(Glyph.SHAPE_TYPE_LINE)
         point_attr.setBaseSize([0.0, 1.0, 1.0])
