@@ -1,5 +1,6 @@
 from cmlibs.zinc.context import Context
 from cmlibs.utils.zinc.general import ChangeManager
+from cmlibs.utils.zinc.finiteelement import get_highest_dimension_mesh
 from cmlibs.zinc.field import Field, FieldFindMeshLocation
 from cmlibs.zinc.element import Element
 from cmlibs.zinc.result import RESULT_OK
@@ -66,9 +67,9 @@ class Mapper(object):
         with ChangeManager(self._field_module):
             data_points = self._field_module.findNodesetByFieldDomainType(Field.DOMAIN_TYPE_DATAPOINTS)
 
-            self._active_data_point_group_field = self._field_module.createFieldNodeGroup(data_points)
+            field_group = self._field_module.createFieldGroup()
             tmp_true = self._field_module.createFieldConstant([1])
-            active_datapoints_group = self._active_data_point_group_field.getNodesetGroup()
+            active_datapoints_group = field_group.createNodesetGroup(data_points)
             active_datapoints_group.addNodesConditional(tmp_true)
 
         field = self._field_module.findFieldByName(field_name)
@@ -105,13 +106,6 @@ class Mapper(object):
         result = self._region.read(sir)
         assert result == RESULT_OK, "Failed to load data file" + str(self._zinc_data_file_name)
 
-    def get_highest_dimension_mesh(self):
-        for d in range(2, -1, -1):
-            m = self._mesh[d]
-            if m.getSize() > 0:
-                return m
-        return None
-
     def _get_project_face_mesh_group(self):
         fm = self._region.getFieldmodule()
         mesh2d = fm.findMeshByDimension(2)
@@ -121,9 +115,9 @@ class Mapper(object):
         is_both = fm.createFieldAnd(is_exterior, is_on_face_xi3_1)
         self._exterior_surface_field = is_both
 
-        self._exterior_face_group = fm.createFieldElementGroup(mesh2d)
-        self._exterior_face_group.setName('exteriorFaceElementGroup')
-        self._exterior_face_mesh_group = self._exterior_face_group.getMeshGroup()
+        field_group = self._field_module.createFieldGroup()
+        field_group.setName('exteriorFaceElementGroup')
+        self._exterior_face_mesh_group = field_group.createMeshGroup(mesh2d)
         result = self._exterior_face_mesh_group.addElementsConditional(is_both)
 
     def map(self):
@@ -133,7 +127,7 @@ class Mapper(object):
         self._get_project_face_mesh_group()
 
         # mesh2d = self._exterior_face_mesh_group.getMasterMesh()
-        mesh3d = self.get_highest_dimension_mesh()
+        mesh3d = get_highest_dimension_mesh(self._field_module)
 
         if self._find_mesh_location_field is None and self._exterior_face_mesh_group is not None:
             self._find_mesh_location_field = self._field_module.createFieldFindMeshLocation(
@@ -156,9 +150,9 @@ class Mapper(object):
                 raise ValueError('Failed to create stored mesh location field.')
 
         datapoints = self._field_module.findNodesetByFieldDomainType(Field.DOMAIN_TYPE_DATAPOINTS)
-        self._activeDataPointGroupField = self._field_module.createFieldNodeGroup(datapoints)
+        field_group = self._field_module.createFieldGroup()
         tmp_true = self._field_module.createFieldConstant([1])
-        active_datapoints_group = self._activeDataPointGroupField.getNodesetGroup()
+        active_datapoints_group = field_group.createNodesetGroup(datapoints)
         active_datapoints_group.addNodesConditional(tmp_true)
         dimension = mesh3d.getDimension()
 
